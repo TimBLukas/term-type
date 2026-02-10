@@ -3,4 +3,12 @@ name = "rust-typer"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "rust_typer"
+path = "src/lib.rs"
+
 [dependencies]
+clap = { version = "4.5.57", features = ["derive"] }
+anyhow = "1.0.101"
+rand = "0.10.0"
+
