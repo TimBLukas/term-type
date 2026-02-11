@@ -59,7 +59,10 @@ fn write_text_to_terminal(text: &str, mut stdout: Stdout) -> Result<Stdout> {
     execute!(stdout, terminal::Clear(terminal::ClearType::All))?;
 
     queue!(stdout, cursor::MoveTo(0, 0))?;
-    queue!(stdout, style::PrintStyledContent(text.magenta()))?;
+    queue!(
+        stdout,
+        style::PrintStyledContent(text.white().on_dark_grey())
+    )?;
     queue!(stdout, cursor::MoveTo(0, 0))?;
 
     stdout.flush()?;
@@ -85,8 +88,23 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<Stdout> {
             if key.kind == KeyEventKind::Press {
                 match key.code {
                     KeyCode::Char(c) => {
-                        queue!(stdout, style::PrintStyledContent(c.magenta()))?;
+                        if let Ok(is_correct) = check_char(c, count, text) {
+                            if is_correct {
+                                queue!(
+                                    stdout,
+                                    style::PrintStyledContent(c.green().on_dark_grey())
+                                )?;
+                            } else if let Some(orig_c) = text.chars().nth(count as usize) {
+                                queue!(
+                                    stdout,
+                                    style::PrintStyledContent(orig_c.red().on_dark_grey())
+                                )?;
+                            }
+                        }
                         count += 1;
+                        if count as usize == text.len() {
+                            break;
+                        }
                     }
                     KeyCode::Backspace => {
                         match cursor_position.0 < 1 {
@@ -115,4 +133,12 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<Stdout> {
     disable_raw_mode()?;
 
     Ok(stdout)
+}
+
+fn check_char(c: char, count: u32, text: &str) -> Result<bool> {
+    if let Some(expected) = text.chars().nth(count as usize) {
+        Ok(c == expected)
+    } else {
+        Err(anyhow!("unable to check char and expected character"))
+    }
 }
