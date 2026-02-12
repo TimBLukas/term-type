@@ -1,7 +1,14 @@
+pub mod result_eval;
+pub mod utils;
 pub mod word_generator;
-use anyhow::{Error, Result, anyhow};
-use std::io::{Stdout, Write, stdout};
 
+use anyhow::{Error, Result, anyhow};
+use std::{
+    io::{Stdout, Write, stdout},
+    time::{Duration, SystemTime},
+};
+
+pub use utils::get_ascii_art;
 pub use word_generator::word_picker::get_words;
 
 use crossterm::{
@@ -27,13 +34,16 @@ pub struct Config {
 pub fn run_test(config: Config) -> Result<()> {
     println!("Running typing test");
 
+    println!("{}", get_ascii_art());
+
     println!("Args:");
     println!("…\t Language: {}", config.language.as_str());
     println!("…\t Words: {}", config.words);
     println!("…\t Sensible: {}", config.sensible);
 
-    let words = get_words(config).unwrap();
+    pause!("Press Enter to Start the Test ...");
 
+    let words = get_words(config).unwrap();
     let text = words.join(" ");
 
     let mut stdout = stdout();
@@ -45,13 +55,28 @@ pub fn run_test(config: Config) -> Result<()> {
         Err(e) => return Err(anyhow!("Failed to write text to terminal")),
     };
 
-    stdout = match get_user_input(&text, stdout) {
-        Ok(stdout) => stdout,
+    let start_time = SystemTime::now();
+
+    let (mut stdout, correct_chars) = match get_user_input(&text, stdout) {
+        Ok((stdout, correct_chars)) => (stdout, correct_chars),
         Err(e) => return Err(anyhow!("Unable to get user input")),
     };
 
     execute!(stdout, LeaveAlternateScreen)?;
 
+    let elapsed = match start_time.elapsed() {
+        Ok(elapsed) => elapsed,
+        Err(e) => return Err(anyhow!("Unable to track time")),
+    };
+
+    println!();
+    println!(
+        "Results: {}",
+        result_eval::eval_correct_chars(correct_chars)
+    );
+    println!();
+    println!("Elapsed Time: {}", elapsed.as_secs_f32());
+    pause!("Press Enter to get back to your terminal ...");
     Ok(())
 }
 
@@ -70,10 +95,12 @@ fn write_text_to_terminal(text: &str, mut stdout: Stdout) -> Result<Stdout> {
     Ok(stdout)
 }
 
-fn get_user_input(text: &str, mut stdout: Stdout) -> Result<Stdout> {
+fn get_user_input(text: &str, mut stdout: Stdout) -> Result<(Stdout, Vec<bool>)> {
     enable_raw_mode()?;
 
     let mut count = 0;
+    let mut correct_chars = vec![false; text.len()];
+
     let MAX_SIZE = match size() {
         Ok((x, y)) => (x, y),
         Err(_) => return Err(anyhow!("Unable to determine terminal size")),
@@ -94,11 +121,13 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<Stdout> {
                                     stdout,
                                     style::PrintStyledContent(c.green().on_dark_grey())
                                 )?;
+                                correct_chars[count as usize] = true;
                             } else if let Some(orig_c) = text.chars().nth(count as usize) {
                                 queue!(
                                     stdout,
                                     style::PrintStyledContent(orig_c.red().on_dark_grey())
                                 )?;
+                                correct_chars[count as usize] = false;
                             }
                         }
                         count += 1;
@@ -132,7 +161,7 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<Stdout> {
 
     disable_raw_mode()?;
 
-    Ok(stdout)
+    Ok((stdout, correct_chars))
 }
 
 fn check_char(c: char, count: u32, text: &str) -> Result<bool> {
