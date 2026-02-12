@@ -28,6 +28,9 @@ cd term-type
 # Build the project
 cargo build --release
 
+# Optional:
+cargo install --path .
+
 # The binary will be available at target/release/term-type
 ```
 
@@ -120,3 +123,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 ## Acknowledgments
 
 Built using Rust and the terminal manipulation capabilities of crossterm.
+The words are generated out of the following books:
+- `de`: Die Verwandlung — Franz Kafka
+- `en`: The Sun Also Rises (UK: Fiesta: The Sun Also Rises) — Ernest Hemingway
