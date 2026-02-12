@@ -22,6 +22,8 @@ use crossterm::{
     },
 };
 
+use crate::result_eval::TestResult;
+
 pub const VALID_LANGUAGES: [&str; 2] = ["en", "de"];
 
 #[derive(Debug)]
@@ -47,6 +49,7 @@ pub fn run_test(config: Config) -> Result<()> {
     let text = words.join(" ");
 
     let mut stdout = stdout();
+    let mut test_result: TestResult = TestResult::default();
 
     execute!(stdout, EnterAlternateScreen)?;
 
@@ -61,21 +64,19 @@ pub fn run_test(config: Config) -> Result<()> {
         Ok((stdout, correct_chars)) => (stdout, correct_chars),
         Err(e) => return Err(anyhow!("Unable to get user input")),
     };
+    test_result.correct_chars = correct_chars;
 
     execute!(stdout, LeaveAlternateScreen)?;
 
-    let elapsed = match start_time.elapsed() {
+    test_result.time = match start_time.elapsed() {
         Ok(elapsed) => elapsed,
         Err(e) => return Err(anyhow!("Unable to track time")),
     };
 
     println!();
-    println!(
-        "Results: {}",
-        result_eval::eval_correct_chars(correct_chars)
-    );
+    println!("Results: {}", test_result.eval_correct_chars());
     println!();
-    println!("Elapsed Time: {}", elapsed.as_secs_f32());
+    println!("Elapsed Time: {}", test_result.time.as_secs_f32());
     pause!("Press Enter to get back to your terminal ...");
     Ok(())
 }

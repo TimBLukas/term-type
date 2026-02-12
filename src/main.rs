@@ -39,5 +39,8 @@ fn main() {
         sensible: args.sensible,
     };
 
-    run_test(config);
+    match run_test(config) {
+        Ok(_) => {}
+        Err(e) => eprintln!("Ann error ocurred: {}", e),
+    };
 }
