@@ -1,17 +1,17 @@
-use std::path::Path;
-
 use super::word_loader::load_words;
 use crate::Config;
 use anyhow::{Result, anyhow};
 
-pub fn get_words(config: Config) -> Result<Vec<String>> {
-    let filepath = match config.language.as_str() {
-        "de" => Path::new("assets")
-            .join("books")
-            .join("verwandlung-kafka-parsed-german.txt"),
-        "en" => Path::new("assets")
-            .join("books")
-            .join("the-sun-also-rises-parsed-english.txt"),
+static GERMAN_BOOK: &[u8] =
+    include_bytes!("../../assets/books/verwandlung-kafka-parsed-german.txt");
+
+static ENGLISH_BOOK: &[u8] =
+    include_bytes!("../../assets/books/the-sun-also-rises-parsed-english.txt");
+
+pub fn get_words<'a>(config: Config) -> Result<Vec<&'a str>> {
+    let book = match config.language.as_str() {
+        "de" => GERMAN_BOOK,
+        "en" => ENGLISH_BOOK,
         _ => {
             return Err(anyhow!(
                 "Unable to get words - invalid language ({})",
@@ -20,5 +20,5 @@ pub fn get_words(config: Config) -> Result<Vec<String>> {
         }
     };
 
-    load_words(config.words, config.sensible, &filepath)
+    load_words(config.words, config.sensible, book)
 }

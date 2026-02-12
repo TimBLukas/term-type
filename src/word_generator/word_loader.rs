@@ -1,17 +1,16 @@
 use anyhow::{Result, anyhow};
 use rand::RngExt;
 use rand::seq::IteratorRandom;
-use std::{fs::read_to_string, path::PathBuf};
 
-pub fn load_words(amount: u32, sensible: bool, filepath: &PathBuf) -> Result<Vec<String>> {
+pub fn load_words(amount: u32, sensible: bool, book: &[u8]) -> Result<Vec<&str>> {
     match sensible {
-        true => load_words_sensible(amount, filepath),
-        false => load_words_random(amount, filepath),
+        true => load_words_sensible(amount, book),
+        false => load_words_random(amount, book),
     }
 }
 
-fn load_words_sensible(amount: u32, filepath: &PathBuf) -> Result<Vec<String>> {
-    let file_content = match get_file_content(filepath) {
+fn load_words_sensible(amount: u32, book: &[u8]) -> Result<Vec<&str>> {
+    let file_content = match get_book_content(book) {
         Ok(content) => content,
         Err(e) => return Err(anyhow!("Error loading file content: {}", e)),
     };
@@ -21,33 +20,36 @@ fn load_words_sensible(amount: u32, filepath: &PathBuf) -> Result<Vec<String>> {
     let end_idx = start_idx + amount_as_usize;
 
     let sub_vec = file_content[start_idx..end_idx].to_vec();
+    println!("{:?}", sub_vec);
     Ok(sub_vec)
 }
 
-fn load_words_random(amount: u32, filepath: &PathBuf) -> Result<Vec<String>> {
-    let file_content = match get_file_content(filepath) {
+fn load_words_random(amount: u32, book: &[u8]) -> Result<Vec<&str>> {
+    let book_content = match get_book_content(book) {
         Ok(content) => content,
         Err(e) => return Err(anyhow!("Error loading file content: {}", e)),
     };
 
-    let indices = get_random_indices(file_content.len(), amount as usize);
+    let indices = get_random_indices(book_content.len(), amount as usize);
 
     let mut result = Vec::new();
     for idx in indices {
-        result.push(file_content[idx].clone());
+        result.push(book_content[idx]);
     }
+    println!("{:?}", result);
 
     Ok(result)
 }
 
-fn get_file_content(filepath: &PathBuf) -> Result<Vec<String>> {
-    let mut file_content = Vec::new();
+fn get_book_content(book: &[u8]) -> Result<Vec<&str>> {
+    let book_content = match std::str::from_utf8(book) {
+        Ok(book_content) => book_content,
+        Err(_) => return Err(anyhow!("Unable to access book content")),
+    };
 
-    for line in read_to_string(filepath).unwrap().lines() {
-        file_content.push(line.to_string())
-    }
+    let book_content_splitted = book_content.split('\n').collect();
 
-    Ok(file_content)
+    Ok(book_content_splitted)
 }
 
 fn get_start_idx(content_len: usize, amount: usize) -> usize {
