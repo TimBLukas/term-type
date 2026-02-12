@@ -40,7 +40,7 @@ impl TestResult {
             wpm,
         }
     }
-    pub fn eval_correct_chars(&mut self) -> String {
+    pub fn eval_correct_chars(&mut self) {
         let mut amount_correct = 0;
         let mut amount_wrong = 0;
 
@@ -60,16 +60,10 @@ impl TestResult {
         self.percentage = percentage;
 
         self.calc_wpm();
-
-        format!(
-            "Amount Correct: {}, Amount Wrong {}, Percentage {} %, this is a typing speed of {} WPM",
-            self.amount_correct_chars, self.amount_wrong_chars, self.percentage, self.wpm
-        )
     }
 
     fn calc_wpm(&mut self) {
         // Formula: (Total Characters/5)/Time in Minutes
         self.wpm = (self.amount_correct_chars as f32 / 5.0) / (self.time.as_secs_f32() / 60.0);
-        println!("{}", self.wpm);
     }
 }

@@ -1,6 +1,6 @@
 use anyhow::{Result, anyhow};
+use rand::RngExt;
 use rand::seq::IteratorRandom;
-use rand::{Rng, RngExt};
 use std::{fs::read_to_string, path::PathBuf};
 
 pub fn load_words(amount: u32, sensible: bool, filepath: &PathBuf) -> Result<Vec<String>> {
@@ -11,9 +11,9 @@ pub fn load_words(amount: u32, sensible: bool, filepath: &PathBuf) -> Result<Vec
 }
 
 fn load_words_sensible(amount: u32, filepath: &PathBuf) -> Result<Vec<String>> {
-    let file_content = match get_file_content(&filepath) {
+    let file_content = match get_file_content(filepath) {
         Ok(content) => content,
-        Err(e) => return Err(anyhow!("Error loading file content: {}", e.to_string())),
+        Err(e) => return Err(anyhow!("Error loading file content: {}", e)),
     };
 
     let amount_as_usize = amount as usize;
@@ -25,9 +25,9 @@ fn load_words_sensible(amount: u32, filepath: &PathBuf) -> Result<Vec<String>> {
 }
 
 fn load_words_random(amount: u32, filepath: &PathBuf) -> Result<Vec<String>> {
-    let file_content = match get_file_content(&filepath) {
+    let file_content = match get_file_content(filepath) {
         Ok(content) => content,
-        Err(e) => return Err(anyhow!("Error loading file content: {}", e.to_string())),
+        Err(e) => return Err(anyhow!("Error loading file content: {}", e)),
     };
 
     let indices = get_random_indices(file_content.len(), amount as usize);

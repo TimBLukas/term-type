@@ -1,8 +1,8 @@
 use std::path::Path;
 
 use super::word_loader::load_words;
-use crate::{Config, VALID_LANGUAGES};
-use anyhow::{Context, Error, Result, anyhow};
+use crate::Config;
+use anyhow::{Result, anyhow};
 
 pub fn get_words(config: Config) -> Result<Vec<String>> {
     let filepath = match config.language.as_str() {
@@ -20,6 +20,5 @@ pub fn get_words(config: Config) -> Result<Vec<String>> {
         }
     };
 
-    println!("The current filepath is {:?}", filepath);
     load_words(config.words, config.sensible, &filepath)
 }
