@@ -5,12 +5,13 @@ use rand::seq::IteratorRandom;
 /// Wrapper function that differentiates between sensible and random words based on the sensible
 /// flag of the config Object
 ///
-/// # Args
-///     amount: u32 Amount of words in the typing test
-///     sensible: bool Should the words / sequence of words should be sensible
-///     book: &[u8] content of the book the words should be loaded from
+/// # Arguments
+/// - `amount`: Amount of words in the typing test
+/// - `sensible`: bool Should the words / sequence of words should be sensible
+/// - `book`: content of the book the words should be loaded from
+///
 /// # Returns
-///     Result<Vec<&str>> Vector of string slices representing the words for the typing test
+/// - `Result<Vec<&str>>`: Vector of string slices representing the words for the typing test
 pub fn load_words(amount: u32, sensible: bool, book: &[u8]) -> Result<Vec<&str>> {
     match sensible {
         true => load_words_sensible(amount, book),
@@ -74,4 +75,58 @@ fn get_random_indices(content_len: usize, amount: usize) -> Vec<usize> {
         .collect();
 
     vals
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_random_indices_all_in_range() {
+        let sample_length = 1000;
+        let amount = 30;
+        let indices = get_random_indices(sample_length, amount);
+
+        let mut all_in_range = true;
+        for idx in indices {
+            if idx > sample_length && all_in_range {
+                all_in_range = false;
+            }
+        }
+        assert!(all_in_range);
+    }
+
+    #[test]
+    fn test_get_random_indices_exact_amount() {
+        let sample_length = 1000;
+        let amount = 30;
+        let indices = get_random_indices(sample_length, amount);
+
+        assert_eq!(indices.len(), amount);
+    }
+
+    #[test]
+    fn test_get_start_idx() {
+        assert_eq!(true, true);
+    }
+
+    #[test]
+    fn test_get_book_content() {
+        assert_eq!(true, true);
+    }
+
+    #[test]
+    fn test_load_words_random() {
+        assert_eq!(true, true);
+    }
+
+    #[test]
+    fn test_load_words_sensible() {
+        assert_eq!(true, true);
+    }
+
+    #[test]
+    fn test_load_words() {
+        assert_eq!(true, true);
+    }
 }

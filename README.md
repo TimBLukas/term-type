@@ -1,22 +1,22 @@
 # term-type
 
-A terminal-based typing speed test application written in Rust. Test and improve your typing speed directly from your command line!
+A terminal-based typing speed test application written in Rust. Test and improve your typing speed directly from your command line with real-time feedback and detailed performance metrics.
 
 ## Features
 
-- **Multi-language support** - Currently supports English (`en`) and German (`de`)
-- **Customizable word count** - Choose how many words you want to type
-- **Two modes** - Random words or sensible sentences
-- **Real-time feedback** - See your mistakes as you type with color-coded characters
-- **Detailed statistics** - Get WPM, accuracy, and time metrics after each test
-- **Clean terminal UI** - Uses the alternate screen buffer for a distraction-free experience
+- **Multi-language support**: Currently supports English and German
+- **Customizable word count**: Choose how many words you want to type
+- **Two test modes**: Random words or complete sentences
+- **Real-time feedback**: Color-coded characters show mistakes as you type (green for correct, red for errors)
+- **Detailed statistics**: View WPM (words per minute), accuracy percentage, and total time after each test
+- **Clean terminal UI**: Uses the alternate screen buffer for a distraction-free typing experience
 
 ## Installation
 
 ### Prerequisites
 
-- Rust 1.70+ (edition 2024)
-- Cargo
+- Rust 1.70 or higher (2024 edition)
+- Cargo (Rust's package manager)
 
 ### Building from source
 
@@ -25,13 +25,13 @@ A terminal-based typing speed test application written in Rust. Test and improve
 git clone <repository-url>
 cd term-type
 
-# Build the project
+# Build the project in release mode
 cargo build --release
 
-# Optional:
+# Optional: Install the binary to your Cargo bin directory
 cargo install --path .
 
-# The binary will be available at target/release/term-type
+# The compiled binary will be located at target/release/term-type
 ```
 
 ## Usage
@@ -39,10 +39,10 @@ cargo install --path .
 ### Basic usage
 
 ```bash
-# Run with default settings (German, 50 words)
+# Run with default settings (German, 50 words, random mode)
 cargo run
 
-# Or use the compiled binary
+# Or run using the compiled binary
 ./target/release/term-type
 ```
 
@@ -52,33 +52,36 @@ cargo run
 term-type [OPTIONS]
 
 Options:
-  -l, --language <LANGUAGE>  Language the typing test should use [default: de]
-  -w, --words <WORDS>        Number of words the typing test should use [default: 50]
-  -s, --sensible             Should the test be made of sensible sentences
-  -h, --help                 Print help
-  -V, --version              Print version
+  -l, --language <LANGUAGE>  Set the language for the typing test [default: de] [possible: en, de]
+  -w, --words <WORDS>        Set the number of words for the test [default: 50]
+  -s, --sensible             Use complete sentences instead of random words
+  -h, --help                 Display help information
+  -V, --version              Display version information
 ```
 
 ### Examples
 
 ```bash
-# English test with 100 words
+# Run an English test with 100 words
 cargo run -- --language en --words 100
 
-# German test with sensible sentences
+# Run a German test with complete sentences
 cargo run -- --language de --words 50 --sensible
 
-# Quick 25-word test
+# Run a quick 25-word English test
 cargo run -- -w 25 -l en
+
+# Run after installation
+term-type -l en -w 100 -s
 ```
 
 ## How it works
 
-1. **Start the test** - Press Enter when ready
-2. **Type the displayed text** - Characters turn green when correct, red when incorrect
-3. **Use Backspace** - Correct mistakes before moving forward
-4. **Press Esc** - Exit the test early if needed
-5. **View results** - See your WPM, accuracy, and total time
+1. **Start the test**: Press Enter when you are ready to begin
+2. **Type the displayed text**: Characters turn green when typed correctly, red when incorrect
+3. **Correct mistakes**: Use Backspace to fix errors before continuing
+4. **Exit early**: Press Escape to quit the test at any time
+5. **View results**: After completion, review your WPM, accuracy percentage, and total time
 
 ## Project Structure
 
@@ -96,19 +99,21 @@ term-type/
 
 ## Dependencies
 
-- **clap** - Command-line argument parsing
-- **anyhow** - Error handling
-- **rand** - Random word selection
-- **crossterm** - Cross-platform terminal manipulation
+- **clap**: Command-line argument parsing with derive macros
+- **anyhow**: Flexible error handling
+- **rand**: Pseudo-random number generation for word selection
+- **crossterm**: Cross-platform terminal manipulation and rendering
 
 ## Contributing
 
-Contributions are welcome! Feel free to:
+Contributions are welcome! You can help by:
 
-- Report bugs
-- Suggest new features
-- Add support for more languages
-- Improve the codebase
+- Reporting bugs and issues
+- Suggesting new features or improvements
+- Adding support for additional languages
+- Submitting pull requests to improve the codebase
+
+Please ensure your code follows Rust conventions and includes appropriate tests where applicable.
 
 ## License
 
@@ -122,7 +127,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 ## Acknowledgments
 
-Built using Rust and the terminal manipulation capabilities of crossterm.
-The words are generated out of the following books:
-- `de`: Die Verwandlung — Franz Kafka
-- `en`: The Sun Also Rises (UK: Fiesta: The Sun Also Rises) — Ernest Hemingway
+Built with Rust and powered by the crossterm library for cross-platform terminal manipulation.
+
+Word corpus sources:
+- German: "Die Verwandlung" by Franz Kafka
+- English: "The Sun Also Rises" by Ernest Hemingway

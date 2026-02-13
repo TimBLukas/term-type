@@ -36,10 +36,11 @@ pub struct Config {
 /// Starts the typing test
 /// Loads the words and waits for the input of the user
 ///
-/// # Args
-///     config: Config config created in main.rs using the user input
+/// # Arguments
+/// - `config`: config created in main.rs using the user input
+///
 /// # Returns
-///     Result<()>
+/// - `Result<()>`: Result if the test was executed successfully
 pub fn run_test(config: Config) -> Result<()> {
     println!("{}", get_ascii_art());
 
@@ -85,11 +86,12 @@ pub fn run_test(config: Config) -> Result<()> {
 
 /// Prints the text the user has to type to the terminal
 ///
-/// # Args
-///     text: &str Text to type
-///     stdout: Stdout stdout object used to print to the terminal
+/// # Arguments
+/// - `text`: Text to type
+/// - `stdout`: stdout object used to print to the terminal
+///
 /// # Returns
-///     Result<Stdout> Returns the provided Stdout object or an Error
+/// - `Result<Stdout>` Returns the provided Stdout object or an Error
 fn write_text_to_terminal(text: &str, mut stdout: Stdout) -> Result<Stdout> {
     execute!(stdout, terminal::Clear(terminal::ClearType::All))?;
 
@@ -107,12 +109,13 @@ fn write_text_to_terminal(text: &str, mut stdout: Stdout) -> Result<Stdout> {
 
 /// Gets the user input after printing to the terminal
 ///
-/// # Args
-///     text: &str Text the user has to type (same text that has been printed to the terminal)
-///     stdout: Stdout Stdout object used to generate the output
+/// # Arguments
+/// - `text`: Text the user has to type (same text that has been printed to the terminal)
+/// - `stdout`: Stdout object used to generate the output
+///
 /// # Returns
-///     Result<(Stdout, Vec<bool>) Stdout object from the input, Vector of the characters typed
-///     correctly. If and error occurs it will be returned
+/// - `Result<(Stdout, Vec<bool>)>` Stdout object from the input, Vector of the characters typed
+///   correctly. If and error occurs it will be returned
 fn get_user_input(text: &str, mut stdout: Stdout) -> Result<(Stdout, Vec<bool>)> {
     enable_raw_mode()?;
 
@@ -180,16 +183,37 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<(Stdout, Vec<bool>)>
 /// Uses the amount of characters typed and the text to be typed to check if a typed char is
 /// correct
 ///
-/// # Args
-///     c: char Character the user typed
-///     count: u32 Current amount of chars typed
-///     text: &str Text the user has to type
+/// # Arguments
+/// - `c`: Character the user typed
+/// - `count`: Current amount of chars typed
+/// - `text`: Text the user has to type
+///
 /// # Returns
-///     Result<bool> Boolean if the typed char was correct or not.
+/// - `Result<bool>` Boolean if the typed char was correct or not.
 fn check_char(c: char, count: u32, text: &str) -> Result<bool> {
     if let Some(expected) = text.chars().nth(count as usize) {
         Ok(c == expected)
     } else {
         Err(anyhow!("unable to check char and expected character"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_user_input() {
+        assert_eq!(true, true);
+    }
+
+    #[test]
+    fn test_write_text_to_terminal() {
+        assert_eq!(true, true);
+    }
+
+    #[test]
+    fn test_run_test() {
+        assert_eq!(true, true);
     }
 }

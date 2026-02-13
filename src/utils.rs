@@ -3,7 +3,7 @@ use crate::result_eval::TestResult;
 /// Prints the ASCII-Art logo of the typing test
 ///
 /// # Returns
-///     &'a str String slice of the logo
+/// - `&'a str` String slice of the logo
 pub fn get_ascii_art<'a>() -> &'a str {
     r#"
   *   )                      *   )                 
@@ -19,12 +19,13 @@ pub fn get_ascii_art<'a>() -> &'a str {
 
 /// Gets as String representing the start secreen that provides general information
 ///
-/// # Args
-///     language: &str language of the typing test
-///     words: u32 amount of words for the typing test
-///     sensible: bool If the text of the typing test should be sensible
+/// # Arguments
+/// - `language`: &str language of the typing test
+/// - `words`: u32 amount of words for the typing test
+/// - `sensible`: bool If the text of the typing test should be sensible
+///
 /// # Returns
-///     String The Start Screen
+/// - `String` The Start Screen
 pub fn get_start_screen(language: &str, words: u32, sensible: bool) -> String {
     format!(
         r#"
@@ -45,10 +46,11 @@ pub fn get_start_screen(language: &str, words: u32, sensible: bool) -> String {
 
 /// Gets the summary of the test (as String)
 ///
-/// # Args
-///     test_result: &mut TestResult Results of the test
+/// # Arguments
+/// - `test_result`: &mut TestResult Results of the test
+///
 /// # Returns
-///     String The Summary
+/// - `String` The Summary
 pub fn get_test_summary(test_result: &mut TestResult) -> String {
     test_result.eval_correct_chars();
 
