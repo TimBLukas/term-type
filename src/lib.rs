@@ -16,6 +16,7 @@ use crossterm::{
     event::{self, Event, KeyCode, KeyEventKind},
     execute, queue,
     style::{self, Stylize},
+    style::{Color, style},
     terminal::{
         self, EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode, size,
     },
@@ -95,7 +96,7 @@ fn write_text_to_terminal(text: &str, mut stdout: Stdout) -> Result<Stdout> {
     queue!(stdout, cursor::MoveTo(0, 0))?;
     queue!(
         stdout,
-        style::PrintStyledContent(text.white().on_dark_grey())
+        style::PrintStyledContent(style(text).with(Color::Reset))
     )?;
     queue!(stdout, cursor::MoveTo(0, 0))?;
 
@@ -134,16 +135,10 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<(Stdout, Vec<bool>)>
                     KeyCode::Char(c) => {
                         if let Ok(is_correct) = check_char(c, count, text) {
                             if is_correct {
-                                queue!(
-                                    stdout,
-                                    style::PrintStyledContent(c.green().on_dark_grey())
-                                )?;
+                                queue!(stdout, style::PrintStyledContent(c.green()))?;
                                 correct_chars[count as usize] = true;
                             } else if let Some(orig_c) = text.chars().nth(count as usize) {
-                                queue!(
-                                    stdout,
-                                    style::PrintStyledContent(orig_c.red().on_dark_grey())
-                                )?;
+                                queue!(stdout, style::PrintStyledContent(orig_c.red()))?;
                                 correct_chars[count as usize] = false;
                             }
                         }
