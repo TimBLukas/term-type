@@ -2,6 +2,15 @@ use anyhow::{Result, anyhow};
 use rand::RngExt;
 use rand::seq::IteratorRandom;
 
+/// Wrapper function that differentiates between sensible and random words based on the sensible
+/// flag of the config Object
+///
+/// # Args
+///     amount: u32 Amount of words in the typing test
+///     sensible: bool Should the words / sequence of words should be sensible
+///     book: &[u8] content of the book the words should be loaded from
+/// # Returns
+///     Result<Vec<&str>> Vector of string slices representing the words for the typing test
 pub fn load_words(amount: u32, sensible: bool, book: &[u8]) -> Result<Vec<&str>> {
     match sensible {
         true => load_words_sensible(amount, book),
@@ -20,7 +29,6 @@ fn load_words_sensible(amount: u32, book: &[u8]) -> Result<Vec<&str>> {
     let end_idx = start_idx + amount_as_usize;
 
     let sub_vec = file_content[start_idx..end_idx].to_vec();
-    println!("{:?}", sub_vec);
     Ok(sub_vec)
 }
 
@@ -36,7 +44,6 @@ fn load_words_random(amount: u32, book: &[u8]) -> Result<Vec<&str>> {
     for idx in indices {
         result.push(book_content[idx]);
     }
-    println!("{:?}", result);
 
     Ok(result)
 }

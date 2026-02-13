@@ -8,6 +8,13 @@ static GERMAN_BOOK: &[u8] =
 static ENGLISH_BOOK: &[u8] =
     include_bytes!("../../assets/books/the-sun-also-rises-parsed-english.txt");
 
+/// Loads the word for a typing test based on the language
+///
+/// # Args
+///     config: Config Config object created based on the user input
+/// # Returns
+///     Result<Vec<&'a str>> Vector of string slices (amount = config.words) in the language of the
+///     config
 pub fn get_words<'a>(config: Config) -> Result<Vec<&'a str>> {
     let book = match config.language.as_str() {
         "de" => GERMAN_BOOK,
