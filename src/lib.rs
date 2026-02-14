@@ -197,23 +197,3 @@ fn check_char(c: char, count: u32, text: &str) -> Result<bool> {
         Err(anyhow!("unable to check char and expected character"))
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_get_user_input() {
-        assert_eq!(true, true);
-    }
-
-    #[test]
-    fn test_write_text_to_terminal() {
-        assert_eq!(true, true);
-    }
-
-    #[test]
-    fn test_run_test() {
-        assert_eq!(true, true);
-    }
-}

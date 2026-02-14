@@ -107,26 +107,19 @@ mod tests {
 
     #[test]
     fn test_get_start_idx() {
-        assert_eq!(true, true);
-    }
+        let sample_length = 1000;
+        let amount = 30;
 
-    #[test]
-    fn test_get_book_content() {
-        assert_eq!(true, true);
-    }
+        let test_iterations = 20;
+        let mut has_failed = false;
 
-    #[test]
-    fn test_load_words_random() {
-        assert_eq!(true, true);
-    }
+        for _ in 0..=test_iterations {
+            let idx = get_start_idx(sample_length, amount);
+            if idx > (sample_length - amount) {
+                has_failed = true;
+            }
+        }
 
-    #[test]
-    fn test_load_words_sensible() {
-        assert_eq!(true, true);
-    }
-
-    #[test]
-    fn test_load_words() {
-        assert_eq!(true, true);
+        assert!(!has_failed);
     }
 }
