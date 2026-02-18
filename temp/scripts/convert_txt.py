@@ -48,7 +48,7 @@ class TxtConverter:
 
 
 if __name__ == "__main__":
-    input_path: str = "assets/books/the-sun-also-rises-english.txt"
-    output_path: str = "assets/books/the-sun-also-rises-parsed-english.txt"
+    input_path: str = "assets/books/illustration-of-today-english.txt"
+    output_path: str = "assets/books/illustration-of-today-parsed-english.txt"
     converter = TxtConverter(input_path, output_path)
     converter.run()
