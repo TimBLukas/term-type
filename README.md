@@ -25,6 +25,14 @@ A terminal-based typing speed test application written in Rust. Test and improve
 git clone <repository-url>
 cd term-type
 
+# In order to compile the rust toolchain is needed
+# Windows: Install rustup-init.exe (check https://forge.rust-lang.org/infra/other-installation-methods.html)
+
+# Linux/Mac
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# if you want to uninstall:
+rustup self uninstall
+
 # Build the project in release mode
 cargo build --release
 
