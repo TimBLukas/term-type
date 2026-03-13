@@ -91,6 +91,9 @@ term-type -l en -w 100 -s
 4. **Exit early**: Press Escape to quit the test at any time
 5. **View results**: After completion, review your WPM, accuracy percentage, and total time
 
+## Screenshots
+
+
 ## Project Structure
 
 ```
