@@ -140,6 +140,10 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 Built with Rust and powered by the crossterm library for cross-platform terminal manipulation.
 
+# Contributions
+
+Contributions are welcome from everyone :)
+
 Word corpus sources:
 - German: "Die Verwandlung" by Franz Kafka, "Faust" by Goethe
 - English: "The Sun Also Rises" by Ernest Hemingway, "Illustration of today"
