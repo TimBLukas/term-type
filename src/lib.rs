@@ -33,6 +33,14 @@ pub struct Config {
     pub sensible: bool,
 }
 
+#[derive(Debug, PartialEq)]
+pub enum TypedCharResult {
+    CORRECT,
+    CAPITALIZATION,
+    FALSE
+}
+
+
 /// Starts the typing test
 /// Loads the words and waits for the input of the user
 ///
@@ -136,13 +144,20 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<(Stdout, Vec<bool>)>
             if key.kind == KeyEventKind::Press {
                 match key.code {
                     KeyCode::Char(c) => {
-                        if let Ok(is_correct) = check_char(c, count, text) {
-                            if is_correct {
+                        if let Ok(char_result) = check_char(c, count, text) {
+                            if char_result == TypedCharResult::CORRECT {
                                 queue!(stdout, style::PrintStyledContent(c.green()))?;
                                 correct_chars[count as usize] = true;
-                            } else if let Some(orig_c) = text.chars().nth(count as usize) {
-                                queue!(stdout, style::PrintStyledContent(orig_c.red()))?;
-                                correct_chars[count as usize] = false;
+                            } else if char_result == TypedCharResult::CAPITALIZATION {
+                                if let Some(orig_c) = text.chars().nth(count as usize) {
+                                    queue!(stdout, style::PrintStyledContent(orig_c.yellow()))?;
+                                    correct_chars[count as usize] = false;
+                                }
+                            } else {
+                                if let Some(orig_c) = text.chars().nth(count as usize) {
+                                    queue!(stdout, style::PrintStyledContent(orig_c.red()))?;
+                                    correct_chars[count as usize] = false;
+                                }
                             }
                         }
                         count += 1;
@@ -189,10 +204,16 @@ fn get_user_input(text: &str, mut stdout: Stdout) -> Result<(Stdout, Vec<bool>)>
 /// - `text`: Text the user has to type
 ///
 /// # Returns
-/// - `Result<bool>` Boolean if the typed char was correct or not.
-fn check_char(c: char, count: u32, text: &str) -> Result<bool> {
+/// - `Result<TypedCharResult>` TypedCharResult differenciating between correctly typed chars, chars
+/// where a Capitalization error was made and incorrect chars.
+fn check_char(c: char, count: u32, text: &str) -> Result<TypedCharResult> {
     if let Some(expected) = text.chars().nth(count as usize) {
-        Ok(c == expected)
+        if c == expected {
+            return Ok(TypedCharResult::CORRECT);
+        } else if c.to_lowercase().to_string() == expected.to_string() || c.to_uppercase().to_string() == expected.to_string() {
+            return Ok(TypedCharResult::CAPITALIZATION);
+        }
+        Ok(TypedCharResult::FALSE)
     } else {
         Err(anyhow!("unable to check char and expected character"))
     }
